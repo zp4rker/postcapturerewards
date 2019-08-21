@@ -1,0 +1,10 @@
+name: PostCaptureRewards
+author: zp4rker
+version: ${project.version}
+main: com.zp4rker.postcapturerewards.PostCaptureRewards
+
+commands:
+  capturepost:
+    aliases: [cp]
+    description: The base command for PostCaptureRewards
+    usage: /capturepost [options]
