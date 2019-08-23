@@ -7,7 +7,7 @@ import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 import java.util.*
 
-class Post(private val location: Location, private val radius: Int, private val commands: Array<MutableList<String>> = arrayOf(mutableListOf(), mutableListOf())) {
+class Post(private val location: Location, private val radius: Int, val commands: Array<MutableList<String>> = arrayOf(mutableListOf(), mutableListOf())) {
 
     private var id = UUID.randomUUID().toString()
     private var team = mutableListOf<Player>()

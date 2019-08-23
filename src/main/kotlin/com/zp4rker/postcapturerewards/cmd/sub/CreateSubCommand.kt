@@ -21,12 +21,12 @@ object CreateSubCommand {
             return
         }
         // arg exists check
-        if (args.size < 2) {
+        if (args.isEmpty()) {
             sender.sendMessage("${ChatColor.RED}Invalid arguments! You need to specify a radius. Usage: $usage")
             return
         }
         // arg format check
-        val radius = args[1].toIntOrNull() ?: run {
+        val radius = args[0].toIntOrNull() ?: run {
             sender.sendMessage("${ChatColor.RED}Please use a valid number. Usage: $usage")
             return
         }
