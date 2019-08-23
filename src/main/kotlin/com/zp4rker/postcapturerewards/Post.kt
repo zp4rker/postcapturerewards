@@ -41,6 +41,12 @@ class Post(private val location: Location, private val radius: Int, private val 
         team = winners
     }
 
+    fun delete() {
+        posts.remove(this)
+        PostCaptureRewards.postsFile.set(id, null)
+        PostCaptureRewards.postsFile.save()
+    }
+
     fun saveToFile() {
         PostCaptureRewards.postsFile.set(id, export())
         PostCaptureRewards.postsFile.save()
@@ -54,6 +60,19 @@ class Post(private val location: Location, private val radius: Int, private val 
         root.set("commands.win", commands[0])
         root.set("commands.lose", commands[1])
         return root
+    }
+
+    companion object {
+        fun atLocation(location: Location): Post? {
+            // search through posts
+            for (post in posts) {
+                if (location.x <= post.top.x && location.z <= post.top.z) {
+                    if (location.x >= post.bottom.x && location.z >= post.bottom.z) return post
+                }
+            }
+            // else
+            return null
+        }
     }
 
 }

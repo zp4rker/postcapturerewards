@@ -33,7 +33,9 @@ object CreateSubCommand {
         // fetch location
         val location = sender.location
         // create post
-        Post(location, radius)
+        val post = Post(location, radius)
+        // save to file
+        post.saveToFile()
         // send notification of creation
         sender.sendMessage("${ChatColor.GREEN}Post successfully created!")
         // instruct to add commands
