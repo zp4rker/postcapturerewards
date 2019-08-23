@@ -2,6 +2,7 @@ name: PostCaptureRewards
 author: zp4rker
 version: ${project.version}
 main: com.zp4rker.postcapturerewards.PostCaptureRewards
+depend: [ASkyBlock]
 
 commands:
   capturepost:

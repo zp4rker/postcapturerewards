@@ -30,6 +30,12 @@
             <version>${kotlin.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.wasteofplastic</groupId>
+            <artifactId>askyblock</artifactId>
+            <version>3.0.9.4</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -39,6 +45,38 @@
             <filtering>true</filtering>
             <includes> <include>*.yml</include> </includes>
         </resource> </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals> <goal>compile</goal> </goals>
+                        <configuration> <jvmTarget>1.8</jvmTarget> </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals> <goal>single</goal> </goals>
+                        <configuration>
+                            <finalName>${project.name}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
