@@ -1,6 +1,7 @@
 package com.zp4rker.postcapturerewards.cmd.sub
 
 import com.zp4rker.postcapturerewards.Post
+import com.zp4rker.postcapturerewards.lstnr.PlayerMoveListener
 import com.zp4rker.postcapturerewards.permissionError
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
@@ -27,6 +28,8 @@ object DeleteSubCommand {
             sender.sendMessage("${ChatColor.RED}There are no posts at your current location. Please run this command while at a post.")
             return
         }
+        // cancel countdown
+        PlayerMoveListener.countdowns.find { it.post == post }?.cancel()
         // delete post
         post.delete()
         // send notification of deletion

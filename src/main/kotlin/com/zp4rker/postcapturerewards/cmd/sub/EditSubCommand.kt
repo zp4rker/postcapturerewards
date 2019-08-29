@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
 
 object EditSubCommand {
     private const val usage = "/capturepost edit (win_commands|lose_commands) (add|remove|reset) [command]"
-    val subCommands = arrayOf(mutableListOf("win_commands", "lose_commands"), mutableListOf("add", "remove", "reset"))
+    val subCommands = arrayOf(listOf("win_commands", "lose_commands"), listOf("add", "remove", "reset"))
 
     fun handle(sender: CommandSender, args: Array<out String>) {
         // sender player check

@@ -19,11 +19,11 @@ object MainCommand : CommandExecutor, TabCompleter {
 
     override fun onTabComplete(sender: CommandSender, cmd: Command, label: String, args: Array<out String>): MutableList<String> {
         val completions = mutableListOf<String>()
-        val subCommands = mutableListOf("create", "delete", "edit")
+        val subCommands = listOf("create", "delete", "edit")
 
         StringUtil.copyPartialMatches(args[0], subCommands, completions)
-        StringUtil.copyPartialMatches(args[1], EditSubCommand.subCommands[0], completions)
-        StringUtil.copyPartialMatches(args[2], EditSubCommand.subCommands[1], completions)
+        if (args.size > 1) StringUtil.copyPartialMatches(args[1], EditSubCommand.subCommands[0], completions)
+        if (args.size > 2) StringUtil.copyPartialMatches(args[2], EditSubCommand.subCommands[1], completions)
         completions.sort()
         return completions
     }
