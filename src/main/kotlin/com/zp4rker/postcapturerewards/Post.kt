@@ -11,7 +11,7 @@ import kotlin.math.pow
 class Post(val location: Location, private val radius: Int, val commands: Array<MutableList<String>> = arrayOf(mutableListOf(), mutableListOf())) {
 
     private var id = UUID.randomUUID().toString()
-    var team = listOf<String>()
+    private var team = listOf<String>()
     val teamPlayers: List<Player> get() = team.map { Bukkit.getPlayer(UUID.fromString(it))!! }
 
     constructor(id: String, team: List<String>, location: Location, radius: Int, commands: Array<MutableList<String>>) : this(location, radius, commands) {

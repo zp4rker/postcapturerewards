@@ -1,5 +1,6 @@
 package com.zp4rker.postcapturerewards
 
+import com.wasteofplastic.askyblock.ASkyBlockAPI
 import com.zp4rker.postcapturerewards.lstnr.PlayerMoveListener
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -61,8 +62,7 @@ class Countdown(val post: Post, val team: List<Player>) {
         val players = post.playersInRegion()
         val teams = mutableListOf<List<Player>>()
         for (player in players) {
-//            if (teams.none { it.contains(player) }) teams.add(ASkyBlockAPI.getInstance().getTeamMembers(player.uniqueId).map { Bukkit.getPlayer(it)!! })
-            if (teams.none { it.contains(player) }) teams.add(listOf(player))
+            if (teams.none { it.contains(player) }) teams.add(ASkyBlockAPI.getInstance().getTeamMembers(player.uniqueId).map { Bukkit.getPlayer(it)!! })
         }
         // check if any new teams in region or team left region
         return teams.any { !it.contains(team[0]) } || teams.none { it.contains(team[0]) }
