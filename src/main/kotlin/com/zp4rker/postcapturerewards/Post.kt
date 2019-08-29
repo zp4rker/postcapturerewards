@@ -11,9 +11,10 @@ import kotlin.math.pow
 class Post(val location: Location, private val radius: Int, val commands: Array<MutableList<String>> = arrayOf(mutableListOf(), mutableListOf())) {
 
     private var id = UUID.randomUUID().toString()
-    var team = listOf<Player>()
+    var team = listOf<String>()
+    val teamPlayers: List<Player> get() = team.map { Bukkit.getPlayer(UUID.fromString(it))!! }
 
-    constructor(id: String, team: MutableList<Player>, location: Location, radius: Int, commands: Array<MutableList<String>>) : this(location, radius, commands) {
+    constructor(id: String, team: List<String>, location: Location, radius: Int, commands: Array<MutableList<String>>) : this(location, radius, commands) {
         this.id = id
         this.team = team
     }
@@ -28,13 +29,17 @@ class Post(val location: Location, private val radius: Int, val commands: Array<
 
     fun replaceTeam(winners: List<Player>) {
         // winners
-        for (member in winners) commands[0].forEach { Bukkit.dispatchCommand(Bukkit.getConsoleSender(), it.replace("@p", member.name)) }
-        winners.forEach { it.sendTitle(null, "${ChatColor.GREEN}Your team just won the post!", 10, 60, 15) }
+        for (member in winners) commands[0].forEach {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), it.replace("@p", member.name))
+            member.sendTitle("", "${ChatColor.GREEN}Your team just won the post!", 10, 60, 15)
+        }
         // losers
-        for (member in team) commands[1].forEach { Bukkit.dispatchCommand(Bukkit.getConsoleSender(), it.replace("@p", member.name)) }
-        team.forEach { it.sendTitle(null, "${ChatColor.RED}Your team just lost the post!", 10, 60, 15)}
+        for (member in teamPlayers) commands[1].forEach {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), it.replace("@p", member.name))
+            member.sendTitle("", "${ChatColor.RED}Your team just lost the post!", 10, 60, 15)
+        }
         // set winners
-        team = winners
+        team = winners.map { it.uniqueId.toString() }
     }
 
     fun delete() {
@@ -52,7 +57,7 @@ class Post(val location: Location, private val radius: Int, val commands: Array<
         val root = PostCaptureRewards.postsFile.yaml.createSection(id)
         root.set("location", location)
         root.set("radius", radius)
-        root.set("team", team.map { it.uniqueId.toString() }.toMutableList())
+        root.set("team", team)
         root.set("commands.win", commands[0])
         root.set("commands.lose", commands[1])
         return root

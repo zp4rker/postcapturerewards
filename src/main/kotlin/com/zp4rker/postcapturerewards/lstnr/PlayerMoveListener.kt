@@ -17,7 +17,6 @@ class PlayerMoveListener : Listener {
     fun onPlayerMove(event: PlayerMoveEvent) {
         // make sure location and world is not null
         val location = event.to ?: return
-        val world = location.world ?: return
         // get post
         val post = posts.find { it.inRegion(location) }
         // post exists check
@@ -42,7 +41,7 @@ class PlayerMoveListener : Listener {
             // check if countdown isnt already running
             if (countdowns.find { it.team.contains(teams[0][0]) } == null) {
                 // start new countdown if present team is foreign
-                if (countdowns.find { it.post.team.contains(teams[0][0]) } == null) countdowns.add(Countdown(post, teams[0]))
+                if (posts.find { it.teamPlayers.contains(teams[0][0]) } == null) countdowns.add(Countdown(post, teams[0]))
             }
         }
     }

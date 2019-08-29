@@ -8,14 +8,22 @@ import org.bukkit.entity.Player
 class Countdown(val post: Post, val team: List<Player>) {
 
     private var secondsPassed = 0
-    private val secondsToCount = PostCaptureRewards.instance.config.getLong("win-countdown", 90)
+    private val secondsToCount = PostCaptureRewards.instance.config.getLong("win-countdown", 15)
 
     private val checkTask: Int = Bukkit.getScheduler().scheduleSyncRepeatingTask(PostCaptureRewards.instance, {
-        secondsPassed += 5
+        // get seconds left
+        val secondsLeft = (secondsToCount - secondsPassed).toInt()
         // send title every 10 seconds
-        if (secondsPassed % 10 >= 1 && secondsPassed % 10 < (secondsPassed - 5) % 10) {
-            val secondsLeft = secondsToCount - secondsPassed
-            team.forEach { it.sendTitle("${ChatColor.GOLD}Capturing post...", "${ChatColor.GRAY}$secondsLeft seconds left", 10, 60, 15) }
+        if (secondsPassed == 0 || secondsLeft % 10 == 0 || secondsLeft < 10) {
+            val timeLeftString = "${ChatColor.GRAY}$secondsLeft seconds left"
+            // send countdown to capturing team
+            team.forEach { it.sendTitle("${ChatColor.GOLD}Capturing post...", timeLeftString, 10, 60, 15) }
+            // send countdown to losing team
+            post.teamPlayers.forEach {
+                if (it.isOnline) {
+                    it.sendTitle("${ChatColor.RED}Losing post...", "${ChatColor.GRAY}An enemy team is capturing your post\n$timeLeftString", 10, 60, 15)
+                }
+            }
         }
         // check if should cancel
         if (shouldCancel()) {
@@ -24,7 +32,9 @@ class Countdown(val post: Post, val team: List<Player>) {
             // remove countdown
             PlayerMoveListener.countdowns.remove(this)
         }
-    }, 20 * 5, 20 * 5)
+        // increment time
+        secondsPassed++
+    }, 0, 20)
 
     private val completionTask: Int = Bukkit.getScheduler().scheduleSyncDelayedTask(PostCaptureRewards.instance, {
         // check if should cancel
@@ -35,7 +45,9 @@ class Countdown(val post: Post, val team: List<Player>) {
         // cancel check task
         Bukkit.getScheduler().cancelTask(checkTask)
         // replace team at post
-        post.replaceTeam(team)
+        post.replaceTeam(team).also { post.saveToFile() }
+        posts.replaceAll { if (it.inRegion(post.location)) post else it }
+        PlayerMoveListener.countdowns.replaceAll { if (it.post.inRegion(post.location)) this else it }
     }, secondsToCount * 20)
 
     fun cancel() {
