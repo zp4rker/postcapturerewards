@@ -1,5 +1,6 @@
 package com.zp4rker.postcapturerewards
 
+import com.zp4rker.postcapturerewards.util.sendTitle
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -25,7 +26,7 @@ class Post(val location: Location, private val radius: Int, val commands: Array<
 
     fun inRegion(location: Location) = this.location.distanceSquared(location) <= radius.toDouble().pow(2.0)
 
-    fun playersInRegion() = location.world!!.getNearbyEntities(location, radius.toDouble(), 128.0, radius.toDouble()) { it is Player }.map { it as Player }
+    fun playersInRegion() = location.world!!.getNearbyEntities(location, radius.toDouble(), 128.0, radius.toDouble()).filterIsInstance<Player>()
 
     fun replaceTeam(winners: List<Player>) {
         // winners

@@ -1,9 +1,7 @@
 package com.zp4rker.postcapturerewards.lstnr
 
-import com.wasteofplastic.askyblock.ASkyBlockAPI
 import com.zp4rker.postcapturerewards.Countdown
 import com.zp4rker.postcapturerewards.posts
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -28,7 +26,10 @@ class PlayerMoveListener : Listener {
         // get teams
         val teams = mutableListOf<List<Player>>()
         for (player in players) {
-            if (teams.none { it.contains(player) }) teams.add(ASkyBlockAPI.getInstance().getTeamMembers(player.uniqueId).map { Bukkit.getPlayer(it)!! })
+            if (teams.none { it.contains(player) }) {
+//                teams.add(ASkyBlockAPI.getInstance().getTeamMembers(player.uniqueId).map { Bukkit.getPlayer(it)!! }.ifEmpty { listOf(player) })
+                teams.add(listOf(player))
+            }
         }
         // check present teams
         if (teams.size > 1) {
